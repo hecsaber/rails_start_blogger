@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_29_075423) do
+ActiveRecord::Schema.define(version: 2020_12_01_072222) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -23,6 +23,27 @@ ActiveRecord::Schema.define(version: 2020_11_29_075423) do
     t.datetime "image_updated_at"
   end
 
+  create_table "attachments", force: :cascade do |t|
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.integer "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.integer "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_attachments_on_article_id"
+  end
+
+  create_table "authors", force: :cascade do |t|
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "crypted_password", null: false
+    t.string "salt", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_authors_on_email", unique: true
+  end
+
   create_table "comments", force: :cascade do |t|
     t.string "author_name"
     t.text "body"
@@ -30,6 +51,17 @@ ActiveRecord::Schema.define(version: 2020_11_29_075423) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["article_id"], name: "index_comments_on_article_id"
+  end
+
+  create_table "photos", force: :cascade do |t|
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
+    t.datetime "image_updated_at"
+    t.integer "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_photos_on_article_id"
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -47,7 +79,9 @@ ActiveRecord::Schema.define(version: 2020_11_29_075423) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "attachments", "articles"
   add_foreign_key "comments", "articles"
+  add_foreign_key "photos", "articles"
   add_foreign_key "taggings", "articles"
   add_foreign_key "taggings", "tags"
 end
